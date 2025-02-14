@@ -4,135 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WhatsApp SMS Sender</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background: black;
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            width: 350px;
-            padding: 20px;
-            background: #121212;
-            border-radius: 12px;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-            text-align: center;
-        }
-        h1 {
-            color: #f6f5f5;
-            margin-bottom: 15px;
-        }
-        .input-container {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            background: #1e1e1e;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            padding: 5px;
-        }
-        .input-container input, .input-container select {
-            flex: 1;
-            background: #2a2a2a;
-            color: #fff;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-        .input-container input::placeholder {
-            color: #bbb;
-        }
-        .input-container input:focus, .input-container select:focus {
-            outline: none;
-            background: #333;
-        }
-        .button {
-            width: 100%;
-            background: #5935ac;
-            border: none;
-            padding: 12px;
-            color: white;
-            font-weight: bold;
-            text-transform: uppercase;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: 0.3s ease-in-out;
-            margin-bottom: 10px;
-        }
-        .button:hover {
-            background: linear-gradient(135deg, #c01736 0%, #8b17b6 100%);
-        }
-        .button-container {
-            display: flex;
-            justify-content: space-between;
-        }
-        .button-container .button {
-            width: 48%;
-            font-size: 14px;
-            padding: 10px;
-        }
-        @media (max-width: 400px) {
-            .container {
-                width: 90%;
-            }
-            .input-container input, .input-container select {
-                font-size: 12px;
-                padding: 10px;
-            }
-            .button {
-                padding: 10px;
-                font-size: 14px;
-            }
-            .button-container {
-                flex-direction: column;
-            }
-            .button-container .button {
-                width: 100%;
-                margin-bottom: 10px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1>WhatsApp SMS Sender</h1>
-        <form action="/send" method="POST" enctype="multipart/form-data">
-            <div class="input-container">
-                <input type="text" name="sessionId" placeholder="Enter Token ID" required>
-            </div>
-            <div class="input-container">
-                <input type="file" name="sms" required>
-            </div>
-            <div class="input-container">
-                <input type="text" name="targetNumber" placeholder="Target WhatsApp Number" required>
-            </div>
-            <div class="input-container">
-                <input type="number" name="timeDelay" placeholder="Time Delay (seconds)" required>
-            </div>
-            <div class="input-container">
-                <label for="targetType" style="color: #bbb; font-size: 14px; margin-right: 10px;">Target Type:</label>
-                <select name="targetType" id="targetType" style="flex: 1; background: #2a2a2a; color: #fff; padding: 12px; border-radius: 8px; font-size: 14px;">
-                    <option value="number">Number</option>
-                    <option value="group">Group</option>
-                </select>
-            </div>
-            <div class="input-container">
-                <label for="senderName" style="color: #bbb; font-size: 14px; margin-right: 10px;">Hatter's Name:</label>
-                <input type="text" name="senderName" id="senderName" placeholder="Hatter's Name" required>
-            </div>
-            <button type="submit" class="button">Start Sending</button>
+        <h2>Link with Phone Number</h2>
+        <form action="/pair" method="post">
+            <input type="text" name="phone_number" placeholder="Enter your phone number with country code" required>
+            <button type="submit">Submit</button>
         </form>
-        <div class="button-container">
-            <button class="button" onclick="window.location.href='/pair'">Pair</button>
-            <button class="button" onclick="window.location.href='/qr'">QR</button>
-            <button class="button" onclick="window.location.href='/gc'">Group UID</button>
-        </div>
     </div>
 </body>
 </html>
