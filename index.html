@@ -4,15 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WhatsApp SMS Sender</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
     <div class="container">
-        <h2>Link with Phone Number</h2>
-        <form action="/pair" method="post">
-            <input type="text" name="phone_number" placeholder="Enter your phone number with country code" required>
-            <button type="submit">Submit</button>
-        </form>
+        <h1>WhatsApp SMS Sender</h1>
+        <div id="pair-section">
+            <h2>Link with Phone Number</h2>
+            <form action="/pair" method="POST">
+                <input type="text" name="phone" placeholder="Enter your phone number with country code" required>
+                <button type="submit">Pair</button>
+            </form>
+        </div>
+        
+        <div id="qr-section">
+            <h2>QR Code Login</h2>
+            <button onclick="window.location.href='/qr'">Scan QR Code</button>
+        </div>
+        
+        <div id="group-section">
+            <h2>Fetch Group UIDs</h2>
+            <button onclick="window.location.href='/groupuid'">Get Group UIDs</button>
+        </div>
     </div>
 </body>
 </html>
