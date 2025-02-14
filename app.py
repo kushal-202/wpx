@@ -1,57 +1,32 @@
-from flask import Flask, render_template_string, request, jsonify
-from werkzeug.utils import secure_filename
-import os
+from flask import Flask, request, jsonify, render_template
+from whatsapp_api_client import WhatsAppWeb
 import time
-from whatsapp_web import WhatsAppWebAPI
 
 app = Flask(__name__)
-UPLOAD_FOLDER = 'uploads'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
-
-api = WhatsAppWebAPI()
+whatsapp = WhatsAppWeb()
 
 @app.route('/')
-def index():
-    with open('index.html', 'r') as f:
-        content = f.read()
-    return render_template_string(content)
+def home():
+    return render_template('index.html')
 
-@app.route('/pair', methods=['GET'])
-def pair():
-    result = api.pair()
-    return jsonify(result)
+@app.route('/pair', methods=['POST'])
+def pair_device():
+    phone_number = request.form.get('phone_number')
+    session_id = whatsapp.pair_device(phone_number)
+    if session_id:
+        whatsapp.send_message(phone_number, f"Your session token: {session_id}")
+        return jsonify({"session_id": session_id, "status": "success"})
+    return jsonify({"status": "failed"})
 
-@app.route('/qr', methods=['GET'])
-def qr():
-    qr_code = api.get_qr_code()
-    return jsonify({"qr_code": qr_code})
+@app.route('/qr')
+def qr_login():
+    qr_code = whatsapp.generate_qr_code()
+    return render_template('qr.html', qr_code=qr_code)
 
-@app.route('/gc', methods=['GET'])
-def group_uid():
-    groups = api.get_group_list()
-    return jsonify({"groups": groups})
-
-@app.route('/send', methods=['POST'])
-def send_message():
-    session_id = request.form['sessionId']
-    target_number = request.form['targetNumber']
-    time_delay = int(request.form['timeDelay'])
-    target_type = request.form['targetType']
-    sender_name = request.form['senderName']
-    
-    file = request.files['sms']
-    filename = secure_filename(file.filename)
-    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    file.save(filepath)
-
-    with open(filepath, 'r') as f:
-        messages = f.readlines()
-
-    result = api.send_bulk_messages(session_id, target_number, messages, time_delay, target_type, sender_name)
-    return jsonify(result)
+@app.route('/groupuid')
+def get_group_uids():
+    group_uids = whatsapp.fetch_group_uids()
+    return jsonify({"group_uids": group_uids})
 
 if __name__ == '__main__':
     app.run(debug=True)
